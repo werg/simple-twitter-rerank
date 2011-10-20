@@ -11,7 +11,8 @@ The REST-backend is written in Clojure/Ring/Compojure, using adamwynne's
 
 ## Dependencies
 
-For the server make sure you have installed:
+For the server make sure you have installed
+
 * Install nginx on your system via package manager (or set up your own reverse proxy)
 * Get [Leiningen](https://github.com/technomancy/leiningen)
 
@@ -34,12 +35,14 @@ Next copy your consumer key and secret, and edit them into your server's config 
 See below for how to configure nginx
 
 If it isn't running, start nginx
+
 * on Ubuntu:
- 
+
 	sudo service nginx start
 
+
 * on Snow Leopard:
-  
+
 	sudo nginx
 
 
@@ -54,7 +57,7 @@ If it isn't running, start nginx
 	cd ../server/
 	
     lein deps
-	lein run script/run.clj
+	lein run c
 
 
 
@@ -76,7 +79,8 @@ Find stuff at [http://localhost/index.html](http://localhost/index.html) in case
 * Find the nginx config file 
   On Ubuntu it's in `/etc/nginx/sites-enabled/default`
   On Mac Snow Leopard it's in `/usr/local/etc/nginx/nginx.conf`
-* To map the /api route to http://localhost:8000/ edit your config file to display something like this:
+* To map the /api route to http://localhost:8000/ edit your config file to display something like this
+
 
 	server {
 		listen       80;
@@ -102,7 +106,6 @@ Find stuff at [http://localhost/index.html](http://localhost/index.html) in case
 			proxy_pass http://localhost:8000;
 			allow 127.0.0.1;
 		}
-
 	}
 
 ## Acknowledgements / further reading

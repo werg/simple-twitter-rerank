@@ -1,6 +1,6 @@
 # Ignore server/resources/cabinit.config
 server/resources/cabinit.config
 # Ignore (generated) js files,
-js/*.js
+client/js/*
 server/lib/*
 

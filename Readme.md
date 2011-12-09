@@ -4,13 +4,14 @@ This is a simple example web-app twitter client.
 It does login via OAuth, retreives the user's timeline and re-ranks it
 by applying a weighted sum of scoring functions (a stupid example is provided).
 
+ Send any feedback to [@werg](http://twitter.com/werg).
+
 ## Code overview
 
 The code comes in two parts, client and server, the client is
 written in pure CoffeeScript with Backbone.js.
 The REST-backend is written in Clojure/Ring/Compojure, using adamwynne's
-[twitter-api](https://github.com/adamwynne/twitter-api) library. Send any feedback to
-[@werg](http://twitter.com/werg)
+[twitter-api](https://github.com/adamwynne/twitter-api) library.
 
 We wrote this to do re-filtering of the twitter stream, which obviously is not ideal
 to do upon each request, but for simplicity's sake we did not include the database backend for now.

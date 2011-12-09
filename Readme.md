@@ -2,18 +2,38 @@
 
 This is a simple example web-app twitter client. 
 It does login via OAuth, retreives the user's timeline and re-ranks it
-by a weighted sum of scoring functions (a stupid example is provided).
+by applying a weighted sum of scoring functions (a stupid example is provided).
 
-The code comes in two parts, one client an one server, the client is
-written in pure CoffeeScript with Backbone.js, a rather simple affair.
+## Code overview
+
+The code comes in two parts, client and server, the client is
+written in pure CoffeeScript with Backbone.js.
 The REST-backend is written in Clojure/Ring/Compojure, using adamwynne's
 [twitter-api](https://github.com/adamwynne/twitter-api) library.
+
+We used Henrik Joreteg's ICanHaz library for client-side templating with mustache.js.
+In hindsight we probably should have used Handlebars since we needed helper functions,
+but it still is a solid library.
+
+We wrote this to do re-filtering of the twitter stream, which obviously is not ideal
+to do upon each request, but for simplicity's sake we did not include the database backend for now.
+To figure out how to add your own scoring functions check out the example filter definition
+`follow-retweet-filter` in `server/src/cabinit/user.clj` which is a map from scoring functions
+to their weight.
+
+	(def follow-retweet-filter 
+		{ #(/ 1.0 (+ 0.1 (featx/user-prop % :followers_count)))                                          0.4
+		  #(double (/ (featx/tweet-prop % :retweet_count) (+ 0.1 (featx/user-prop % :followers_count)))) 0.6})
+
+
+You then need to wrap it in a function, and add it to the `defroutes` in `server/src/cabinit/web.clj`.
+
 
 ## Dependencies
 
 For the server make sure you have installed
 
-* Install nginx on your system via package manager (or set up your own reverse proxy)
+* Install nginx on your system via package manager (or set up your own preferred reverse proxy)
 * Get [Leiningen](https://github.com/technomancy/leiningen)
 
 To build the client side coffeescript you need to install [Node.js](http://nodejs.org/) and [npm](http://npmjs.org/)
@@ -59,21 +79,14 @@ on Snow Leopard:
 	lein run c
 
 
-
-## Requirements & Installation
-
-you need node.js, npm and CoffeeScript
-
-After installing npm, to get CoffeeScript you enter:
-
-	npm install -g coffee-script
-
-
 ### Test the app
 Find stuff at [http://localhost/index.html](http://localhost/index.html) in case you set
 `/path/to/client/directory` to lead directly to where `index.html` resides
 
 ## Set up the reverse proxy
+If you want to serve your app as a static html-file, you need a reverse
+proxy to get around the cross-site access restriction when calling the
+API.
 
 * Find the nginx config file 
   On Ubuntu it's in `/etc/nginx/sites-enabled/default`
@@ -81,31 +94,32 @@ Find stuff at [http://localhost/index.html](http://localhost/index.html) in case
 * To map the /api route to http://localhost:8000/ edit your config file to display something like this
 
 
-	server {
-		listen       80;
-		server_name  localhost;
-		access_log  /var/log/nginx/localhost.access.log;
+		server {
+			listen       80;
+			server_name  localhost;
+			access_log  /var/log/nginx/localhost.access.log;
 
-		location / {
-			root /path/to/client/directory;
-			autoindex on;
-			allow 127.0.0.1;
-			index index.html index.htm;
+			location / {
+				root /path/to/client/directory;
+				autoindex on;
+				allow 127.0.0.1;
+				index index.html index.htm;
+			}
+			
+			location /api {
+				proxy_pass http://localhost:8000;
+			}
+			
+			location /auth {
+				proxy_pass http://localhost:8000;
+				allow 127.0.0.1;
+			}
+			location /twitter_oauth_response {
+				proxy_pass http://localhost:8000;
+				allow 127.0.0.1;
+			}
 		}
-		
-		location /api {
-			proxy_pass http://localhost:8000;
-		}
-		
-		location /auth {
-			proxy_pass http://localhost:8000;
-			allow 127.0.0.1;
-		}
-		location /twitter_oauth_response {
-			proxy_pass http://localhost:8000;
-			allow 127.0.0.1;
-		}
-	}
+
 
 ## Acknowledgements / further reading
 Thanks to 
@@ -114,6 +128,16 @@ for most of the oauth dance bits.
 Also to [https://github.com/adamwynne/twitter-api](https://github.com/adamwynne/twitter-api)
 for much of the rest.
 
+## Session & OAuth
+
+### Reverse proxy
+
+If you want to serve your app as a static html-file, you need a reverse
+proxy to get around the cross-site access restriction when calling the
+API. We use nginx to do this, we serve up `/` on the server (i.e.
+`http://localhost/`) as a static file, using nginx directly. we then
+allocate all the paths we want to serve by our api and send them to 
+the port we are serving it from (in this case 8000).
 ## License
 
 Copyright (c) 2011 Priska Herger and Gabriel Pickard

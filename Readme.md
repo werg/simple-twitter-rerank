@@ -11,10 +11,6 @@ written in pure CoffeeScript with Backbone.js.
 The REST-backend is written in Clojure/Ring/Compojure, using adamwynne's
 [twitter-api](https://github.com/adamwynne/twitter-api) library.
 
-We used Henrik Joreteg's ICanHaz library for client-side templating with mustache.js.
-In hindsight we probably should have used Handlebars since we needed helper functions,
-but it still is a solid library.
-
 We wrote this to do re-filtering of the twitter stream, which obviously is not ideal
 to do upon each request, but for simplicity's sake we did not include the database backend for now.
 To figure out how to add your own scoring functions check out the example filter definition
@@ -127,6 +123,13 @@ Thanks to
 for most of the oauth dance bits.
 Also to [https://github.com/adamwynne/twitter-api](https://github.com/adamwynne/twitter-api)
 for much of the rest.
+
+We used Henrik Joreteg's ICanHaz library for client-side templating with mustache.js.
+In hindsight we probably should have used Handlebars since we needed helper functions,
+but it still is a solid library. Furthermore we used maranomynet's [linkify](http://github.com/maranomynet/linkify/)
+jquery plugin to turn everything linkable in tweets into links.
+
+
 
 ## Session & OAuth
 

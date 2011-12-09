@@ -9,7 +9,8 @@ by applying a weighted sum of scoring functions (a stupid example is provided).
 The code comes in two parts, client and server, the client is
 written in pure CoffeeScript with Backbone.js.
 The REST-backend is written in Clojure/Ring/Compojure, using adamwynne's
-[twitter-api](https://github.com/adamwynne/twitter-api) library.
+[twitter-api](https://github.com/adamwynne/twitter-api) library. Send any feedback to
+[@werg](http://twitter.com/werg)
 
 We wrote this to do re-filtering of the twitter stream, which obviously is not ideal
 to do upon each request, but for simplicity's sake we did not include the database backend for now.

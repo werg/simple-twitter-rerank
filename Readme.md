@@ -131,16 +131,6 @@ jquery plugin to turn everything linkable in tweets into links.
 
 
 
-## Session & OAuth
-
-### Reverse proxy
-
-If you want to serve your app as a static html-file, you need a reverse
-proxy to get around the cross-site access restriction when calling the
-API. We use nginx to do this, we serve up `/` on the server (i.e.
-`http://localhost/`) as a static file, using nginx directly. we then
-allocate all the paths we want to serve by our api and send them to 
-the port we are serving it from (in this case 8000).
 ## License
 
 Copyright (c) 2011 Priska Herger and Gabriel Pickard
